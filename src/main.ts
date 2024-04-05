@@ -1,8 +1,8 @@
-import { createDefaultCharacter } from "./models/character.ts"
+import { createCharacter } from "./data/character.ts"
 import { printCharacter } from "./print/character.ts"
 
 function main() {
-  const character = createDefaultCharacter()
+  const character = createCharacter()
   printCharacter(character)
 }
 

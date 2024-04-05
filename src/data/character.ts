@@ -1,9 +1,9 @@
 import {
   Abilities,
   Ability,
-  DEFAULT_ABILITIES,
   getAbilityModifier,
   getAbilityScore,
+  rollAbilities,
   setAbilityScore,
 } from "./abilities.ts"
 import { diceValue } from "./dice.ts"
@@ -26,11 +26,16 @@ export interface Character {
   race: Race
 }
 
-export function createDefaultCharacter(): Character {
-  const klass: Klass = "fighter"
-  const race: Race = "dragonborn"
+export interface CreateCharacterOptions {
+  klass?: Klass
+  race?: Race
+}
+
+export function createCharacter(
+  { klass = "fighter", race = "human" }: CreateCharacterOptions = {},
+): Character {
   const abilities = calculateAbilityBonuses({
-    abilities: DEFAULT_ABILITIES,
+    abilities: rollAbilities(),
     race,
   })
   return {

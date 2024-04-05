@@ -50,6 +50,14 @@ export function rollAbilityScore(): Score {
   return createScore(highestThree.reduce((sum, roll) => (sum += roll), 0))
 }
 
+export function rollAbilities(): Abilities {
+  const abilities: Abilities = new Map<Ability, Score>()
+  for (const ability of ABILITIES) {
+    abilities.set(ability, rollAbilityScore())
+  }
+  return abilities
+}
+
 export function abilityScoreToModifier(score: number): number {
   return Math.floor((score - 10) / 2)
 }

@@ -1,12 +1,12 @@
 import {
   abilityPrettyName,
   abilityScoreToPrettyModifier,
-} from "../models/abilities.ts"
-import { Character } from "../models/character.ts"
-import { klassPrettyName } from "../models/klass.ts"
-import { calcXpToNextLevel } from "../models/levels.ts"
-import { racePrettyName } from "../models/race.ts"
-import { Bonus, Score } from "../models/score.ts"
+} from "../data/abilities.ts"
+import { Character } from "../data/character.ts"
+import { klassPrettyName } from "../data/klass.ts"
+import { calcXpToNextLevel } from "../data/levels.ts"
+import { racePrettyName } from "../data/race.ts"
+import { Bonus, Score } from "../data/score.ts"
 
 export function printCharacter(character: Character): void {
   const { name, xp, level, race, abilities, klass, hitPoints } = character
