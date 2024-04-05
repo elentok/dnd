@@ -27,19 +27,21 @@ export interface Character {
 }
 
 export interface CreateCharacterOptions {
+  name?: string
   klass?: Klass
   race?: Race
 }
 
 export function createCharacter(
-  { klass = "fighter", race = "human" }: CreateCharacterOptions = {},
+  { name = "Shnitzel the Magnificent", klass = "fighter", race = "human" }:
+    CreateCharacterOptions = {},
 ): Character {
   const abilities = calculateAbilityBonuses({
     abilities: rollAbilities(),
     race,
   })
   return {
-    name: "Shnitzel the Magnificent",
+    name,
     xp: 0,
     level: 1,
     hitPoints: calculateFirstLevelHitPoints({ klass, abilities }),
