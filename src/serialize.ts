@@ -2,7 +2,14 @@ import { parse, stringify } from "https://deno.land/std@0.207.0/toml/mod.ts"
 import { Character } from "./data/character.ts"
 import { number, object, string } from "npm:yup"
 import { Bonus, Score } from "./data/score.ts"
-import { ABILITIES, Abilities, Ability } from "./data/abilities.ts"
+import {
+  ABILITIES,
+  Abilities,
+  Ability,
+  abilityScoreToModifier,
+  abilityScoreToPrettyModifier,
+  getAbilityModifier,
+} from "./data/abilities.ts"
 import { ALL_RACES } from "./data/race.ts"
 import { ALL_KLASSES } from "./data/klass.ts"
 
@@ -22,8 +29,6 @@ const characterSchema = object({
     charisma: string().required(),
   }),
 })
-
-// const raceSchema = string().oneOf(ALL_RACES)
 
 export function serializeCharacter(character: Character): string {
   return stringify({
@@ -52,7 +57,9 @@ export function deserializeCharacter(serialized: string): Character {
 function serializeAbilities(abilities: Abilities): Record<string, string> {
   const serialized: Record<string, string> = {}
   abilities.forEach((score, ability) => {
-    serialized[ability] = serializeScore(score)
+    serialized[ability] = `${abilityScoreToPrettyModifier(score.value)} ${
+      serializeScore(score)
+    }`
   })
   return serialized
 }
@@ -62,7 +69,9 @@ function deserializeAbilities(
 ): Abilities {
   return new Map<Ability, Score>(
     ABILITIES.map((ability) => {
-      return [ability, deserializeScore(rawAbilities[ability])]
+      const scoreWithModifier = rawAbilities[ability]
+      const score = scoreWithModifier.replace(/^\(\+?\d+\) /, "")
+      return [ability, deserializeScore(score)]
     }),
   )
 }
