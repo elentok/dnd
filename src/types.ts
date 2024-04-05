@@ -1,3 +1,0 @@
-interface Player {
-  xp: number
-}
