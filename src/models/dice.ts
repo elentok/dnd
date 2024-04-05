@@ -15,6 +15,27 @@ export function diceValue(dice: Dice): number {
   return value
 }
 
-export function roll(dice: Dice): number {
+export function rollSingle(dice: Dice): number {
   return Math.ceil(Math.random() * diceValue(dice))
+}
+
+export interface RollOptions {
+  rolls?: number
+  mode?: "sum" | "highest" | "lowest"
+}
+
+export function roll(
+  dice: Dice,
+  { rolls = 1, mode = "sum" }: RollOptions = {},
+): number {
+  const values = Array.from({ length: rolls }).map(() => rollSingle(dice))
+
+  switch (mode) {
+    case "sum":
+      return values.reduce((prev, val) => prev + val, 0)
+    case "lowest":
+      return Math.min(...values)
+    case "highest":
+      return Math.max(...values)
+  }
 }

@@ -8,7 +8,7 @@ import {
 } from "./abilities.ts"
 import { diceValue } from "./dice.ts"
 import { Klass, klassFeatures } from "./klass.ts"
-import { Race } from "./race.ts"
+import { getRaceAbilityBonus, Race } from "./race.ts"
 import { createScore, Score } from "./score.ts"
 
 export interface Character {
@@ -28,16 +28,41 @@ export interface Character {
 
 export function createDefaultCharacter(): Character {
   const klass: Klass = "fighter"
-  const abilities = new Map(DEFAULT_ABILITIES)
+  const race: Race = "dragonborn"
+  const abilities = calculateAbilityBonuses({
+    abilities: DEFAULT_ABILITIES,
+    race,
+  })
   return {
     name: "Shnitzel the Magnificent",
     xp: 0,
     level: 1,
     hitPoints: calculateFirstLevelHitPoints({ klass, abilities }),
-    race: "dragonborn",
+    race,
     klass,
     abilities,
   }
+}
+
+export function calculateAbilityBonuses({
+  abilities,
+  race,
+}: {
+  abilities: Abilities
+  race: Race
+}): Abilities {
+  const newAbilities = new Map<Ability, Score>()
+  for (const [ability, score] of abilities) {
+    const bonuses = []
+
+    const raceAbilityBonus = getRaceAbilityBonus(race, ability)
+    if (raceAbilityBonus != null) {
+      bonuses.push({ source: `${race} race bonus`, value: raceAbilityBonus })
+    }
+
+    newAbilities.set(ability, createScore(score.baseValue, bonuses))
+  }
+  return newAbilities
 }
 
 export function calculateFirstLevelHitPoints({

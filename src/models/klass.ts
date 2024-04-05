@@ -15,6 +15,10 @@ export type Klass =
   | "ranger"
   | "barbarian"
 
+export function klassPrettyName(klass: Klass): string {
+  return klass.replace(/\b[a-z]/g, (ch) => ch.toLocaleUpperCase())
+}
+
 export interface KlassFeatures {
   hitDie: Dice
 }

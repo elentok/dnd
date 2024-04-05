@@ -31,3 +31,8 @@ export function getLevel(xp: number): number {
 
   return XP_BY_LEVEL[XP_BY_LEVEL.length - 1]
 }
+
+export function calcXpToNextLevel(xp: number): number {
+  const level = getLevel(xp)
+  return XP_BY_LEVEL[level + 1] - xp
+}
