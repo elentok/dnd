@@ -1,4 +1,4 @@
-import { createCharacter } from "../data/character.ts"
+import { createCharacter } from "../transforms/createCharacter.ts"
 import { printCharacter } from "../print/character.ts"
 import { saveCharacter } from "../storage.ts"
 

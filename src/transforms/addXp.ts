@@ -1,8 +1,18 @@
-import { getAbilityModifier } from "./abilities.ts"
-import { Character } from "./character.ts"
-import { roll } from "./dice.ts"
-import { klassFeatures } from "./klass.ts"
-import { Bonus, createScore } from "./score.ts"
+import { getAbilityModifier } from "../data/abilities.ts"
+import { Character } from "../data/character.ts"
+import { roll } from "../data/dice.ts"
+import { klassFeatures } from "../data/klass.ts"
+import { getLevel } from "../data/levels.ts"
+import { Bonus, createScore } from "../data/score.ts"
+
+export function addXp(character: Character, amount: number): Character {
+  const xp = character.xp + amount
+  const newLevel = getLevel(xp)
+
+  const withMoreXp = { ...character, xp }
+
+  return (newLevel === character.level) ? withMoreXp : levelUp(character)
+}
 
 export function levelUp(character: Character): Character {
   const hp = character.hitPoints
@@ -24,7 +34,7 @@ function rollLevelUpHitPointsBoost(character: Character): Bonus[] {
   const newLevel = level + 1
   return [
     {
-      source: `1D${hitDie} roll (level up to ${newLevel})`,
+      source: `1${hitDie} roll (level up to ${newLevel})`,
       value: roll(hitDie),
     },
     {

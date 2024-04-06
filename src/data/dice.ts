@@ -39,3 +39,5 @@ export function roll(
       return Math.max(...values)
   }
 }
+
+export const _internals = { roll }

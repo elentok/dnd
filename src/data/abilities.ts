@@ -1,19 +1,16 @@
-// import { assertIsDefined } from "@/helpers/assert";
-// import { Dice, roll } from "./dice";
-// import { Score, createScore } from "./score";
-
 import { roll } from "./dice.ts"
 import { createScore, Score } from "./score.ts"
 
-export type Ability =
-  | "strength"
-  | "dexterity"
-  | "constitution"
-  | "intelligence"
-  | "wisdom"
-  | "charisma"
+export interface Abilities {
+  strength: Score
+  dexterity: Score
+  constitution: Score
+  intelligence: Score
+  wisdom: Score
+  charisma: Score
+}
 
-export type Abilities = Map<Ability, Score>
+export type Ability = keyof Abilities
 
 export const ABILITIES: Ability[] = [
   "strength",
@@ -24,14 +21,14 @@ export const ABILITIES: Ability[] = [
   "charisma",
 ]
 
-export const DEFAULT_ABILITIES: Abilities = new Map<Ability, Score>([
-  ["strength", createScore(15)],
-  ["dexterity", createScore(15)],
-  ["constitution", createScore(13)],
-  ["intelligence", createScore(12)],
-  ["wisdom", createScore(10)],
-  ["charisma", createScore(8)],
-])
+export const DEFAULT_ABILITIES: Abilities = {
+  strength: createScore(15),
+  dexterity: createScore(15),
+  constitution: createScore(13),
+  intelligence: createScore(12),
+  wisdom: createScore(10),
+  charisma: createScore(8),
+}
 
 export function abilityPrettyName(ability: Ability): string {
   return ability.replace(/^[a-z]/, (ch) => ch.toLocaleUpperCase())
@@ -51,11 +48,14 @@ export function rollAbilityScore(): Score {
 }
 
 export function rollAbilities(): Abilities {
-  const abilities: Abilities = new Map<Ability, Score>()
-  for (const ability of ABILITIES) {
-    abilities.set(ability, rollAbilityScore())
+  return {
+    strength: rollAbilityScore(),
+    dexterity: rollAbilityScore(),
+    constitution: rollAbilityScore(),
+    intelligence: rollAbilityScore(),
+    wisdom: rollAbilityScore(),
+    charisma: rollAbilityScore(),
   }
-  return abilities
 }
 
 export function abilityScoreToModifier(score: number): number {
@@ -67,25 +67,25 @@ export function abilityScoreToPrettyModifier(score: number): string {
   return modifier > 0 ? `(+${modifier})` : `(${modifier})`
 }
 
-export function getAbilityScore(abilities: Abilities, ability: Ability): Score {
-  const score = abilities.get(ability)
-  if (score == null) {
-    throw new Error(`No score for ability '${ability}'`)
-  }
-  return score
-}
+// export function getAbilityScore(abilities: Abilities, ability: Ability): Score {
+//   const score = abilities.get(ability)
+//   if (score == null) {
+//     throw new Error(`No score for ability '${ability}'`)
+//   }
+//   return score
+// }
 
-export function setAbilityScore(
-  abilities: Abilities,
-  ability: Ability,
-  score: Score,
-): Abilities {
-  return new Map(abilities).set(ability, score)
-}
+// export function setAbilityScore(
+//   abilities: Abilities,
+//   ability: Ability,
+//   score: Score,
+// ): Abilities {
+//   return new Map(abilities).set(ability, score)
+// }
 
-export function getAbilityModifier(
-  abilities: Abilities,
-  ability: Ability,
-): number {
-  return abilityScoreToModifier(getAbilityScore(abilities, ability).value)
-}
+// export function getAbilityModifier(
+//   abilities: Abilities,
+//   ability: Ability,
+// ): number {
+//   return abilityScoreToModifier(getAbilityScore(abilities, ability).value)
+// }

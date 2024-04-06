@@ -1,4 +1,5 @@
 import {
+  ABILITIES,
   abilityPrettyName,
   abilityScoreToPrettyModifier,
 } from "../data/abilities.ts"
@@ -22,7 +23,8 @@ export function printCharacter(character: Character): void {
   console.info(`- XP: ${xp} (${calcXpToNextLevel(xp)} to next level)`)
   console.info(`- HP: ${stringifyScore(hitPoints)}`)
   console.info("- Abilities:")
-  for (const [ability, score] of abilities.entries()) {
+  for (const ability of ABILITIES) {
+    const score = abilities[ability]
     const modifier = abilityScoreToPrettyModifier(score.value)
     console.info(
       `  - ${abilityPrettyName(ability)}: ${modifier} ${stringifyScore(score)}`,

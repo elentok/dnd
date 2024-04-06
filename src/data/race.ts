@@ -1,33 +1,6 @@
 import { Ability } from "./abilities.ts"
 
-export type Race =
-  | "aarakocra"
-  | "aasimar"
-  | "dragonborn"
-  | "dwarf"
-  | "elf"
-  | "firbolg"
-  | "genasi"
-  | "gnome"
-  | "goblin"
-  | "goliath"
-  | "half-elf"
-  | "half-orc"
-  | "halfling"
-  | "human"
-  | "kenku"
-  | "kobold"
-  | "lizardfolk"
-  | "orc"
-  | "tabaxi"
-  | "tiefling"
-  | "triton"
-
-export function racePrettyName(race: Race): string {
-  return race.replace(/\b[a-z]/g, (ch) => ch.toLocaleUpperCase())
-}
-
-export const ALL_RACES: Race[] = [
+export const RACES = [
   "aarakocra",
   "aasimar",
   "dragonborn",
@@ -38,8 +11,8 @@ export const ALL_RACES: Race[] = [
   "gnome",
   "goblin",
   "goliath",
-  "half-elf",
-  "half-orc",
+  "halfElf",
+  "halfOrc",
   "halfling",
   "human",
   "kenku",
@@ -49,95 +22,76 @@ export const ALL_RACES: Race[] = [
   "tabaxi",
   "tiefling",
   "triton",
-]
+] as const
+
+export type Race = typeof RACES[number]
 
 interface RaceFeatures {
-  abilityBonuses?: RaceAbilityBonus[]
+  abilityBonuses?: Partial<Record<Ability, number>>
   notes?: string[]
 }
 
-interface RaceAbilityBonus {
-  ability: Ability
-  value: number
-}
-
-const RACE_FEATURES = new Map<Race, RaceFeatures>([
-  ["dwarf", { abilityBonuses: [{ ability: "constitution", value: 2 }] }],
-  ["elf", { abilityBonuses: [{ ability: "dexterity", value: 2 }] }],
-  ["half-elf", {
-    abilityBonuses: [{ ability: "charisma", value: 2 }],
+const RACE_FEATURES: Partial<Record<Race, RaceFeatures>> = {
+  dwarf: { abilityBonuses: { constitution: 2 } },
+  elf: { abilityBonuses: { dexterity: 2 } },
+  halfElf: {
+    abilityBonuses: { charisma: 2 },
     notes: ["Add +1 to two ability scores (other than charisma)"],
-  }],
-  ["gnome", { abilityBonuses: [{ ability: "intelligence", value: 2 }] }],
-  [
-    "dragonborn",
-    {
-      abilityBonuses: [
-        { ability: "strength", value: 2 },
-        { ability: "charisma", value: 1 },
-      ],
+  },
+  gnome: { abilityBonuses: { intelligence: 2 } },
+  dragonborn: {
+    abilityBonuses: {
+      strength: 2,
+      charisma: 1,
     },
-  ],
-  [
-    "aasimar",
-    {
-      abilityBonuses: [
-        { ability: "charisma", value: 2 },
-        { ability: "wisdom", value: 1 },
-      ],
+  },
+  aasimar: {
+    abilityBonuses: {
+      charisma: 2,
+      wisdom: 1,
     },
-  ],
-  [
-    "half-orc",
-    {
-      abilityBonuses: [
-        { ability: "strength", value: 2 },
-        { ability: "constitution", value: 1 },
-      ],
+  },
+  halfOrc: {
+    abilityBonuses: {
+      strength: 2,
+      constitution: 1,
     },
-  ],
-  [
-    "halfling",
-    {
-      abilityBonuses: [
-        { ability: "dexterity", value: 2 },
-        { ability: "constitution", value: 1 },
-      ],
+  },
+  halfling: {
+    abilityBonuses: {
+      dexterity: 2,
+      constitution: 1,
     },
-  ],
-  [
-    "tiefling",
-    {
-      abilityBonuses: [
-        { ability: "charisma", value: 2 },
-        { ability: "intelligence", value: 1 },
-      ],
+  },
+  tiefling: {
+    abilityBonuses: {
+      charisma: 2,
+      intelligence: 1,
     },
-  ],
-  [
-    "human",
-    {
-      abilityBonuses: [
-        { ability: "charisma", value: 1 },
-        { ability: "constitution", value: 1 },
-        { ability: "dexterity", value: 1 },
-        { ability: "intelligence", value: 1 },
-        { ability: "strength", value: 1 },
-        { ability: "wisdom", value: 1 },
-      ],
+  },
+  human: {
+    abilityBonuses: {
+      charisma: 1,
+      constitution: 1,
+      dexterity: 1,
+      intelligence: 1,
+      strength: 1,
+      wisdom: 1,
     },
-  ],
-])
-
-export function getRaceFeatures(race: Race): RaceFeatures {
-  return RACE_FEATURES.get(race) ?? {}
+  },
 }
 
-export function getRaceAbilityBonus(
+export function raceFeatures(race: Race): RaceFeatures {
+  return RACE_FEATURES[race] ?? {}
+}
+
+export function raceAbilityBonus(
   race: Race,
   ability: Ability,
 ): number | undefined {
-  return getRaceFeatures(race)?.abilityBonuses?.find((b) =>
-    b.ability === ability
-  )?.value
+  return raceFeatures(race).abilityBonuses?.[ability]
+}
+
+export function racePrettyName(race: Race): string {
+  return race.replace(/\b[a-z]/g, (ch) => ch.toLocaleUpperCase())
 }

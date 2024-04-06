@@ -6,11 +6,9 @@ import {
   ABILITIES,
   Abilities,
   Ability,
-  abilityScoreToModifier,
   abilityScoreToPrettyModifier,
-  getAbilityModifier,
 } from "./data/abilities.ts"
-import { ALL_RACES } from "./data/race.ts"
+import { RACES } from "./data/race.ts"
 import { ALL_KLASSES } from "./data/klass.ts"
 
 const characterSchema = object({
@@ -18,7 +16,7 @@ const characterSchema = object({
   xp: number().required(),
   level: number().required(),
   hitPoints: string().required(),
-  race: string().required().oneOf(ALL_RACES),
+  race: string().required().oneOf(RACES),
   klass: string().required().oneOf(ALL_KLASSES),
   abilities: object({
     strength: string().required(),
@@ -56,24 +54,24 @@ export function deserializeCharacter(serialized: string): Character {
 
 function serializeAbilities(abilities: Abilities): Record<string, string> {
   const serialized: Record<string, string> = {}
-  abilities.forEach((score, ability) => {
+  for (const ability of ABILITIES) {
+    const score = abilities[ability]
     serialized[ability] = `${abilityScoreToPrettyModifier(score.value)} ${
       serializeScore(score)
     }`
-  })
+  }
   return serialized
 }
 
 function deserializeAbilities(
   rawAbilities: Record<Ability, string>,
 ): Abilities {
-  return new Map<Ability, Score>(
-    ABILITIES.map((ability) => {
-      const scoreWithModifier = rawAbilities[ability]
-      const score = scoreWithModifier.replace(/^\(\+?\d+\) /, "")
-      return [ability, deserializeScore(score)]
-    }),
-  )
+  return ABILITIES.reduce((acc, ability) => {
+    const scoreWithModifier = rawAbilities[ability]
+    const score = scoreWithModifier.replace(/^\(\+?\d+\) /, "")
+    acc[ability] = deserializeScore(score)
+    return acc
+  }, {} as Abilities)
 }
 
 function serializeScore({ bonuses, value, baseValue }: Score): string {
