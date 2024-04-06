@@ -4,6 +4,6 @@ import { racePrettyName } from "./race.ts"
 
 describe(racePrettyName.name, () => {
   it("prettifies the name", () => {
-    assertEquals(racePrettyName("half-elf"), "Half-Elf")
+    assertEquals(racePrettyName("halfElf"), "Half Elf")
   })
 })

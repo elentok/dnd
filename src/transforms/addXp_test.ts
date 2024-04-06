@@ -1,12 +1,13 @@
 import { assertEquals } from "https://deno.land/std@0.221.0/assert/mod.ts"
 import { describe, it } from "https://deno.land/std@0.221.0/testing/bdd.ts"
-import { createCharacter } from "../data/character.ts"
 import { addXp } from "./addXp.ts"
 import { _internals } from "../data/dice.ts"
 import {
   returnsNext,
   stub,
 } from "https://deno.land/std@0.221.0/testing/mock.ts"
+import { createCharacter } from "./createCharacter.ts"
+import { abilityScoreToModifier } from "../data/abilities.ts"
 
 describe(addXp.name, () => {
   it("adds XP to the character", () => {
@@ -23,18 +24,21 @@ describe(addXp.name, () => {
     })
 
     it("increments the hit points", () => {
-      stub(_internals, "roll", returnsNext([3]))
+      // stub(_internals, "rollSingle", returnsNext([3]))
+      stub(_internals, "rollSingle", () => 3)
 
-      const originalCharacter = createCharacter()
+      const originalCharacter = createCharacter({
+        race: "human",
+        klass: "wizard", // 1d6 hit die
+      })
       const character = addXp(originalCharacter, 300)
 
       const { value, baseValue, bonuses } = originalCharacter.hitPoints
 
       assertEquals(character.hitPoints, {
         ...originalCharacter.hitPoints,
-        // value: 10,
         baseValue,
-        value: value + 5,
+        value: value + 2,
         bonuses: [
           ...bonuses,
           {
@@ -43,7 +47,9 @@ describe(addXp.name, () => {
           },
           {
             source: "Constitution Modifier (level up to 2)",
-            // value: originalCharacter.abilities.get
+            value: abilityScoreToModifier(
+              originalCharacter.abilities.constitution.value,
+            ),
           },
         ],
       })

@@ -15,7 +15,7 @@ export function diceValue(dice: Dice): number {
   return value
 }
 
-export function rollSingle(dice: Dice): number {
+function rollSingle(dice: Dice): number {
   return Math.ceil(Math.random() * diceValue(dice))
 }
 
@@ -28,7 +28,9 @@ export function roll(
   dice: Dice,
   { rolls = 1, mode = "sum" }: RollOptions = {},
 ): number {
-  const values = Array.from({ length: rolls }).map(() => rollSingle(dice))
+  const values = Array.from({ length: rolls }).map(() =>
+    _internals.rollSingle(dice)
+  )
 
   switch (mode) {
     case "sum":
@@ -40,4 +42,4 @@ export function roll(
   }
 }
 
-export const _internals = { roll }
+export const _internals = { rollSingle }

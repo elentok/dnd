@@ -1,4 +1,4 @@
-import { getAbilityModifier } from "../data/abilities.ts"
+import { abilityScoreToModifier } from "../data/abilities.ts"
 import { Character } from "../data/character.ts"
 import { roll } from "../data/dice.ts"
 import { klassFeatures } from "../data/klass.ts"
@@ -30,7 +30,9 @@ export function levelUp(character: Character): Character {
 function rollLevelUpHitPointsBoost(character: Character): Bonus[] {
   const { klass, abilities, level } = character
   const { hitDie } = klassFeatures(klass)
-  const consitutionModifier = getAbilityModifier(abilities, "constitution")
+  const constitutionModifier = abilityScoreToModifier(
+    abilities.constitution.value,
+  )
   const newLevel = level + 1
   return [
     {
@@ -38,8 +40,8 @@ function rollLevelUpHitPointsBoost(character: Character): Bonus[] {
       value: roll(hitDie),
     },
     {
-      source: `Consitution Modifier (level up to ${newLevel})`,
-      value: consitutionModifier,
+      source: `Constitution Modifier (level up to ${newLevel})`,
+      value: constitutionModifier,
     },
   ]
 }

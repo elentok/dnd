@@ -93,5 +93,6 @@ export function raceAbilityBonus(
 }
 
 export function racePrettyName(race: Race): string {
-  return race.replace(/\b[a-z]/g, (ch) => ch.toLocaleUpperCase())
+  return race.replace(/[A-Z]/g, (ch) => ` ${ch.toLocaleUpperCase()}`)
+    .replace(/^[a-z]/g, (ch) => ch.toLocaleUpperCase())
 }
