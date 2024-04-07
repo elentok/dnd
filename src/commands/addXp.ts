@@ -1,10 +1,14 @@
 import { pickCharacter } from "../pickers.ts"
+import { printCharacter } from "../print/character.ts"
+import { addXp } from "../transforms/addXp.ts"
 
-export async function addXp(
+export async function addXpCommand(
   amount: number,
   characterQuery?: string,
 ): Promise<void> {
-  const character = await pickCharacter(characterQuery)
+  const originalCharacter = await pickCharacter(characterQuery)
+  if (originalCharacter == null) return
 
-  console.log("[addXp.ts] addXp", character)
+  const character = addXp(originalCharacter, amount)
+  printCharacter(character)
 }

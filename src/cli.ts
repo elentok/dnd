@@ -25,8 +25,8 @@ program.command("add-char <name>").description("Adds a character").action(
 program.command("add-xp <amount> [query]").description("Adds XP to a character")
   .action(
     async (amount: number, characterQuery?: string) => {
-      const { addXp } = await import("./commands/addXp.ts")
-      addXp(amount, characterQuery)
+      const { addXpCommand } = await import("./commands/addXp.ts")
+      addXpCommand(amount, characterQuery)
     },
   )
 

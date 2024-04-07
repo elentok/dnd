@@ -7,7 +7,7 @@ import { Character } from "../data/character.ts"
 import { diceValue, roll } from "../data/dice.ts"
 import { Klass, klassFeatures } from "../data/klass.ts"
 import { Race, raceAbilityBonus } from "../data/race.ts"
-import { createScore, Score } from "../data/score.ts"
+import { addBonus, createScore, Score } from "../data/score.ts"
 
 export interface CreateCharacterOptions {
   name?: string
@@ -65,28 +65,22 @@ export function addRaceAbilityBonuses({
   abilities: Abilities
   race: Race
 }): Abilities {
-  const addBonus = (ability: Ability): Score => {
+  const addRaceAbilityBonus = (ability: Ability): Score => {
     const bonusValue = raceAbilityBonus(race, ability)
     const score = abilities[ability]
-
-    if (bonusValue == null) return score
-
-    return {
-      ...score,
-      bonuses: [...score.bonuses, {
-        source: `${race} race bonus`,
-        value: bonusValue,
-      }],
-    }
+    return (bonusValue == null) ? score : addBonus(score, {
+      source: `${race} race bonus`,
+      value: bonusValue,
+    })
   }
 
   return {
-    strength: addBonus("strength"),
-    dexterity: addBonus("dexterity"),
-    constitution: addBonus("constitution"),
-    intelligence: addBonus("intelligence"),
-    wisdom: addBonus("wisdom"),
-    charisma: addBonus("charisma"),
+    strength: addRaceAbilityBonus("strength"),
+    dexterity: addRaceAbilityBonus("dexterity"),
+    constitution: addRaceAbilityBonus("constitution"),
+    intelligence: addRaceAbilityBonus("intelligence"),
+    wisdom: addRaceAbilityBonus("wisdom"),
+    charisma: addRaceAbilityBonus("charisma"),
   }
 }
 
