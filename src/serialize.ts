@@ -37,9 +37,9 @@ export function serializeCharacter(character: Character): string {
 }
 
 export function deserializeCharacter(serialized: string): Character {
-  const rawCharacter1 = parse(serialized)
+  const rawCharacter = parse(serialized)
   const { name, xp, level, hitPoints, race, klass, abilities } = characterSchema
-    .validateSync(rawCharacter1)
+    .validateSync(rawCharacter)
 
   return {
     name,
@@ -68,7 +68,7 @@ function deserializeAbilities(
 ): Abilities {
   return ABILITIES.reduce((acc, ability) => {
     const scoreWithModifier = rawAbilities[ability]
-    const score = scoreWithModifier.replace(/^\(\+?\d+\) /, "")
+    const score = scoreWithModifier.replace(/^\([\+\-]?\d+\) /, "")
     acc[ability] = deserializeScore(score)
     return acc
   }, {} as Abilities)
@@ -86,7 +86,7 @@ function stringifyBonus({ value, source }: Bonus): string {
   return `${prettyValue} (${source})`
 }
 
-function deserializeScore(serialized: string): Score {
+export function deserializeScore(serialized: string): Score {
   const match = /^(\d+) = (\d+) (.*)/.exec(serialized)
   if (match == null) {
     throw new Error(`Cannot desrialize score '${serialized}'`)
@@ -94,19 +94,21 @@ function deserializeScore(serialized: string): Score {
 
   const value = Number(match[1])
   const baseValue = Number(match[2])
-  const bonuses: Bonus[] = match[3].split(", ").map((bonus) => {
-    const bonusMatch = /^(\+?\d+) \((.*)\)$/.exec(bonus)
-    if (bonusMatch == null) {
-      throw new Error(
-        `Cannot deserialize bonus '${bonus}' of score '${serialized}`,
-      )
-    }
-
-    return {
-      value: Number(bonusMatch[1]),
-      source: bonusMatch[2],
-    }
-  })
+  const bonuses: Bonus[] = match[3].split(", ").map(deserializeBonus)
 
   return { value, baseValue, bonuses }
+}
+
+export function deserializeBonus(serialized: string): Bonus {
+  const bonusMatch = /^([\+\-]?\d+) \((.*)\)$/.exec(serialized)
+  if (bonusMatch == null) {
+    throw new Error(
+      `Cannot deserialize bonus '${serialized}'`,
+    )
+  }
+
+  return {
+    value: Number(bonusMatch[1]),
+    source: bonusMatch[2],
+  }
 }

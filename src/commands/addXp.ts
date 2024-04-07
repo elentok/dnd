@@ -3,12 +3,18 @@ import { printCharacter } from "../print/character.ts"
 import { addXp } from "../transforms/addXp.ts"
 
 export async function addXpCommand(
-  amount: number,
+  amount: string,
   characterQuery?: string,
 ): Promise<void> {
   const originalCharacter = await pickCharacter(characterQuery)
   if (originalCharacter == null) return
 
-  const character = addXp(originalCharacter, amount)
+  const amountNumber = Number(amount)
+  if (isNaN(amountNumber)) {
+    console.error(`Invalid amount value ${amount}`)
+  }
+
+  const character = addXp(originalCharacter, amountNumber)
+  console.log("[bazinga] [addXp.ts] addXpCommand", character)
   printCharacter(character)
 }

@@ -11,7 +11,7 @@ export function addXp(character: Character, amount: number): Character {
 
   const withMoreXp = { ...character, xp }
 
-  return (newLevel === character.level) ? withMoreXp : levelUp(character)
+  return (newLevel === character.level) ? withMoreXp : levelUp(withMoreXp)
 }
 
 export function levelUp(character: Character): Character {
