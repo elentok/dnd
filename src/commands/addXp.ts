@@ -1,20 +1,26 @@
-import { pickCharacter } from "../pickers.ts"
-import { printCharacter } from "../print/character.ts"
+import { pickCharacters } from "../pickers.ts"
+import { saveCharacter } from "../storage.ts"
 import { addXp } from "../transforms/addXp.ts"
 
 export async function addXpCommand(
   amount: string,
   characterQuery?: string,
 ): Promise<void> {
-  const originalCharacter = await pickCharacter(characterQuery)
-  if (originalCharacter == null) return
-
   const amountNumber = Number(amount)
   if (isNaN(amountNumber)) {
     console.error(`Invalid amount value ${amount}`)
   }
 
-  const character = addXp(originalCharacter, amountNumber)
-  console.log("[bazinga] [addXp.ts] addXpCommand", character)
-  printCharacter(character)
+  const characters = await pickCharacters(characterQuery)
+  for (const originalCharacter of characters) {
+    const { character, notes } = addXp(originalCharacter, amountNumber)
+    saveCharacter(character)
+    if (notes != null) {
+      console.info()
+      console.info(character.name)
+      for (const note of notes) {
+        console.info(`- ${note}`)
+      }
+    }
+  }
 }
