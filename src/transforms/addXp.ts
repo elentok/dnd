@@ -59,14 +59,13 @@ function rollLevelUpHitPointsBoost(character: Character): Bonus[] {
   const constitutionModifier = abilityScoreToModifier(
     abilities.constitution.value,
   )
-  const newLevel = level + 1
   return [
     {
-      source: `1${hitDie} roll (level up to ${newLevel})`,
+      source: { type: "level-up-hit-die" },
       value: roll(hitDie),
     },
     {
-      source: `Constitution Modifier (level up to ${newLevel})`,
+      source: { type: "ability", ability: "constitution" },
       value: constitutionModifier,
     },
   ]

@@ -8,6 +8,7 @@ import { klassPrettyName } from "../data/klass.ts"
 import { calcXpToNextLevel } from "../data/levels.ts"
 import { racePrettyName } from "../data/race.ts"
 import { Bonus, Score } from "../data/score.ts"
+import { serializeScore } from "../serialize.ts"
 
 export function printCharacter(character: Character): void {
   const { name, xp, level, race, abilities, klass, hitPoints } = character
@@ -21,25 +22,13 @@ export function printCharacter(character: Character): void {
 
   console.info(`${name} (${description})`)
   console.info(`- XP: ${xp} (${calcXpToNextLevel(xp)} to next level)`)
-  console.info(`- HP: ${stringifyScore(hitPoints)}`)
+  console.info(`- HP: ${serializeScore(hitPoints)}`)
   console.info("- Abilities:")
   for (const ability of ABILITIES) {
     const score = abilities[ability]
     const modifier = abilityScoreToPrettyModifier(score.value)
     console.info(
-      `  - ${abilityPrettyName(ability)}: ${modifier} ${stringifyScore(score)}`,
+      `  - ${abilityPrettyName(ability)}: ${modifier} ${serializeScore(score)}`,
     )
   }
-}
-
-function stringifyScore({ bonuses, value, baseValue }: Score): string {
-  if (bonuses.length === 0) return `${value}`
-
-  const prettyBonuses = bonuses.map(stringifyBonus).join(" ")
-  return `${value} = ${baseValue} ${prettyBonuses}`
-}
-
-function stringifyBonus({ value, source }: Bonus): string {
-  const prettyValue = value > 0 ? `+${value}` : value
-  return `${prettyValue} (${source})`
 }

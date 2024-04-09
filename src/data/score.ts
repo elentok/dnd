@@ -1,11 +1,18 @@
+import { Ability } from "./abilities.ts"
+
 export interface Score {
   value: number
   baseValue: number
   bonuses: Bonus[]
 }
 
+export type BonusSource = { type: "race" | "level-up-hit-die" } | {
+  type: "ability"
+  ability: Ability
+}
+
 export interface Bonus {
-  source: string
+  source: BonusSource
   value: number
 }
 

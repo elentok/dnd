@@ -21,6 +21,10 @@ export const ABILITIES: Ability[] = [
   "charisma",
 ]
 
+export function isAbility(value: string): value is Ability {
+  return ABILITIES.includes(value as Ability)
+}
+
 export const DEFAULT_ABILITIES: Abilities = {
   strength: createScore(15),
   dexterity: createScore(15),

@@ -31,6 +31,10 @@ export function createCharacter(
     race,
     klass,
     abilities,
+    armorClass: createScore(10, [{
+      value: abilityScoreToModifier(abilities.dexterity.value),
+      source: { type: "ability", ability: "dexterity" },
+    }]),
   }
 }
 
@@ -69,7 +73,7 @@ export function addRaceAbilityBonuses({
     const bonusValue = raceAbilityBonus(race, ability)
     const score = abilities[ability]
     return (bonusValue == null) ? score : addBonus(score, {
-      source: `${race} race bonus`,
+      source: { type: "race" },
       value: bonusValue,
     })
   }
@@ -96,6 +100,9 @@ export function calculateFirstLevelHitPoints({
     abilities.constitution.value,
   )
   return createScore(diceValue(hitDie), [
-    { value: consitutionModifier, source: "Constitution Modifier" },
+    {
+      value: consitutionModifier,
+      source: { type: "ability", ability: "constitution" },
+    },
   ])
 }

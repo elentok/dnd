@@ -1,12 +1,13 @@
 import { parse, stringify } from "https://deno.land/std@0.207.0/toml/mod.ts"
 import { Character } from "./data/character.ts"
 import { number, object, string } from "npm:yup"
-import { Bonus, Score } from "./data/score.ts"
+import { Bonus, BonusSource, Score } from "./data/score.ts"
 import {
   ABILITIES,
   Abilities,
   Ability,
   abilityScoreToPrettyModifier,
+  isAbility,
 } from "./data/abilities.ts"
 import { RACES } from "./data/race.ts"
 import { ALL_KLASSES } from "./data/klass.ts"
@@ -74,16 +75,26 @@ function deserializeAbilities(
   }, {} as Abilities)
 }
 
-function serializeScore({ bonuses, value, baseValue }: Score): string {
+export function serializeScore({ bonuses, value, baseValue }: Score): string {
   if (bonuses.length === 0) return `${value}`
 
-  const prettyBonuses = bonuses.map(stringifyBonus).join(", ")
+  const prettyBonuses = bonuses.map(serializeBonus).join(", ")
   return `${value} = ${baseValue} ${prettyBonuses}`
 }
 
-function stringifyBonus({ value, source }: Bonus): string {
+function serializeBonus({ value, source }: Bonus): string {
   const prettyValue = value > 0 ? `+${value}` : value
-  return `${prettyValue} (${source})`
+  return `${prettyValue} (${serializeBonusSource(source)})`
+}
+
+function serializeBonusSource(source: BonusSource): string {
+  switch (source.type) {
+    case "race":
+    case "level-up-hit-die":
+      return source.type
+    case "ability":
+      return `ability:${source.ability}`
+  }
 }
 
 export function deserializeScore(serialized: string): Score {
@@ -109,6 +120,27 @@ export function deserializeBonus(serialized: string): Bonus {
 
   return {
     value: Number(bonusMatch[1]),
-    source: bonusMatch[2],
+    source: deserializeBonusSource(bonusMatch[2]),
   }
+}
+
+export function deserializeBonusSource(serialized: string): BonusSource {
+  if (serialized === "race") {
+    return { type: "race" }
+  }
+
+  if (serialized === "level-up-hit-die") {
+    return { type: "level-up-hit-die" }
+  }
+
+  const match = /ability:([a-z]+)/.exec(serialized)
+  if (match != null) {
+    const ability = match[1]
+    if (!isAbility(ability)) {
+      throw new Error(`Invalid ability '${ability}`)
+    }
+    return { type: "ability", ability }
+  }
+
+  throw new Error(`Invalid bonus source '${serialized}'`)
 }

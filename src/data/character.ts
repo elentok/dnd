@@ -16,4 +16,6 @@ export interface Character {
   abilities: Abilities
   klass: Klass
   race: Race
+
+  armorClass?: Score
 }
