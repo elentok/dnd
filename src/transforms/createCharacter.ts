@@ -13,14 +13,28 @@ export interface CreateCharacterOptions {
   name?: string
   klass?: Klass
   race?: Race
+  baseAbilities?: BaseAbilities
+}
+
+interface BaseAbilities {
+  strength?: number
+  dexterity?: number
+  constitution?: number
+  intelligence?: number
+  wisdom?: number
+  charisma?: number
 }
 
 export function createCharacter(
-  { name = "Shnitzel the Magnificent", klass = "fighter", race = "human" }:
-    CreateCharacterOptions = {},
+  {
+    name = "Shnitzel the Magnificent",
+    klass = "fighter",
+    race = "human",
+    baseAbilities = {},
+  }: CreateCharacterOptions = {},
 ): Character {
   const abilities = addRaceAbilityBonuses({
-    abilities: rollAbilities(),
+    abilities: calculateAbilities(baseAbilities),
     race,
   })
   return {
@@ -38,28 +52,32 @@ export function createCharacter(
   }
 }
 
+export function calculateAbilities(base: BaseAbilities = {}): Abilities {
+  return {
+    strength: calculateAbility(base.strength),
+    dexterity: calculateAbility(base.dexterity),
+    constitution: calculateAbility(base.constitution),
+    intelligence: calculateAbility(base.intelligence),
+    wisdom: calculateAbility(base.wisdom),
+    charisma: calculateAbility(base.charisma),
+  }
+}
+
+export function calculateAbility(base?: number): Score {
+  return createScore(base != null ? base : rollAbilityScore())
+}
+
 /**
  * Roll 4d6, take the 3 highest values and sum them.
  */
-export function rollAbilityScore(): Score {
+export function rollAbilityScore(): number {
   const rolls = Array.from({ length: 4 })
     .map(() => roll("d6"))
     .sort((a, b) => b - a)
 
   const highestThree = rolls.slice(0, 3)
 
-  return createScore(highestThree.reduce((sum, roll) => (sum += roll), 0))
-}
-
-export function rollAbilities(): Abilities {
-  return {
-    strength: rollAbilityScore(),
-    dexterity: rollAbilityScore(),
-    constitution: rollAbilityScore(),
-    intelligence: rollAbilityScore(),
-    wisdom: rollAbilityScore(),
-    charisma: rollAbilityScore(),
-  }
+  return highestThree.reduce((sum, roll) => (sum += roll), 0)
 }
 
 export function addRaceAbilityBonuses({

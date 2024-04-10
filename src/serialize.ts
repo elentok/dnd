@@ -17,6 +17,7 @@ const characterSchema = object({
   xp: number().required(),
   level: number().required(),
   hitPoints: string().required(),
+  armorClass: string().required(),
   race: string().required().oneOf(RACES),
   klass: string().required().oneOf(ALL_KLASSES),
   abilities: object({
@@ -33,14 +34,16 @@ export function serializeCharacter(character: Character): string {
   return stringify({
     ...character,
     hitPoints: serializeScore(character.hitPoints),
+    armorClass: serializeScore(character.armorClass),
     abilities: serializeAbilities(character.abilities),
   })
 }
 
 export function deserializeCharacter(serialized: string): Character {
   const rawCharacter = parse(serialized)
-  const { name, xp, level, hitPoints, race, klass, abilities } = characterSchema
-    .validateSync(rawCharacter)
+  const { name, xp, level, hitPoints, race, klass, abilities, armorClass } =
+    characterSchema
+      .validateSync(rawCharacter)
 
   return {
     name,
@@ -49,6 +52,7 @@ export function deserializeCharacter(serialized: string): Character {
     race,
     klass,
     hitPoints: deserializeScore(hitPoints),
+    armorClass: deserializeScore(armorClass),
     abilities: deserializeAbilities(abilities),
   }
 }

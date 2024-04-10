@@ -54,7 +54,7 @@ export function levelUp(character: Character): TransformResult {
 }
 
 function rollLevelUpHitPointsBoost(character: Character): Bonus[] {
-  const { klass, abilities, level } = character
+  const { klass, abilities } = character
   const { hitDie } = klassFeatures(klass)
   const constitutionModifier = abilityScoreToModifier(
     abilities.constitution.value,
