@@ -24,9 +24,17 @@ program.command("add-char <name>").description("Adds a character").action(
 
 program.command("add-xp <amount> [query]").description("Adds XP to a character")
   .action(
-    async (amount: number, characterQuery?: string) => {
+    async (amount: string, characterQuery?: string) => {
       const { addXpCommand } = await import("./commands/addXp.ts")
       addXpCommand(amount, characterQuery)
+    },
+  )
+
+program.command("battle").description("Starts a battle")
+  .action(
+    async () => {
+      const { startBattle } = await import("./commands/startBattle.ts")
+      startBattle()
     },
   )
 

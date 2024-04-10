@@ -1,5 +1,12 @@
 import { Character } from "./data/character.ts"
+import { Game } from "./data/game.ts"
 import { deserializeCharacter, serializeCharacter } from "./serialize.ts"
+
+export function loadGame(): Game {
+  return {
+    characters: loadCharacters(),
+  }
+}
 
 export function saveCharacter(character: Character): void {
   Deno.writeTextFileSync(filename(character), serializeCharacter(character))
