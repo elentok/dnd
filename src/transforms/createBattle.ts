@@ -4,10 +4,21 @@ import { Character } from "../data/character.ts"
 import { roll } from "../data/dice.ts"
 import { Game } from "../data/game.ts"
 
-export function createBattle(game: Game): Battle {
+export interface CreateBattleOptions {
+  /**
+   * Initiative rolls mapped by player name (if a player has no roll the
+   * function will roll for them).
+   */
+  initiativeRolls?: Record<string, number>
+}
+
+export function createBattle(
+  game: Game,
+  options: CreateBattleOptions = {},
+): Battle {
   const order = game.characters.map((ch) => ({
     ch,
-    initiative: rollInitiative(ch),
+    initiative: getOrRollInitiative(ch, options.initiativeRolls),
   })).sort((a, b) => b.initiative - a.initiative)
 
   const initiativeRolls: Record<string, number> = order.reduce(
@@ -22,6 +33,14 @@ export function createBattle(game: Game): Battle {
     initiativeRolls,
     order: order.map((x) => x.ch),
   }
+}
+
+function getOrRollInitiative(
+  character: Character,
+  initiativeRolls?: Record<string, number>,
+): number {
+  const initiative = initiativeRolls?.[character.name]
+  return initiative != null ? initiative : rollInitiative(character)
 }
 
 function rollInitiative(character: Character): number {
