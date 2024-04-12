@@ -2,10 +2,15 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "npm:@total-typescript/shoehorn": "npm:@total-typescript/shoehorn@0.1.2",
       "npm:commander@11.1.0": "npm:commander@11.1.0",
       "npm:yup": "npm:yup@1.4.0"
     },
     "npm": {
+      "@total-typescript/shoehorn@0.1.2": {
+        "integrity": "sha512-p7nNZbOZIofpDNyP0u1BctFbjxD44Qc+oO5jufgQdFdGIXJLc33QRloJpq7k5T59CTgLWfQSUxsuqLcmeurYRw==",
+        "dependencies": {}
+      },
       "commander@11.1.0": {
         "integrity": "sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==",
         "dependencies": {}

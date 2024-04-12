@@ -1,12 +1,8 @@
 import { Abilities } from "./abilities.ts"
+import { Armor } from "./equipment/armor.ts"
 import { Klass } from "./klass.ts"
 import { Race } from "./race.ts"
 import { Score } from "./score.ts"
-
-/**
- * The base armor class when there is no armor equipped.
- */
-export const BASE_ARMOR_CLASS = 10
 
 export interface Character {
   /**
@@ -22,5 +18,6 @@ export interface Character {
   klass: Klass
   race: Race
 
+  armor?: Armor
   armorClass: Score
 }

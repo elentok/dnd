@@ -3,17 +3,20 @@ import {
   Ability,
   abilityScoreToModifier,
 } from "../data/abilities.ts"
-import { BASE_ARMOR_CLASS, Character } from "../data/character.ts"
+import { Character } from "../data/character.ts"
 import { diceValue, roll } from "../data/dice.ts"
+import { Armor } from "../data/equipment/armor.ts"
 import { Klass, klassFeatures } from "../data/klass.ts"
 import { Race, raceAbilityBonus } from "../data/race.ts"
 import { addBonus, createScore, Score } from "../data/score.ts"
+import { calculateArmorClass } from "./calculateArmorClass.ts"
 
 export interface CreateCharacterOptions {
   name?: string
   klass?: Klass
   race?: Race
   baseAbilities?: BaseAbilities
+  armor?: Armor
 }
 
 interface BaseAbilities {
@@ -31,6 +34,7 @@ export function createCharacter(
     klass = "fighter",
     race = "human",
     baseAbilities = {},
+    armor,
   }: CreateCharacterOptions = {},
 ): Character {
   const abilities = addRaceAbilityBonuses({
@@ -45,10 +49,8 @@ export function createCharacter(
     race,
     klass,
     abilities,
-    armorClass: createScore(BASE_ARMOR_CLASS, [{
-      value: abilityScoreToModifier(abilities.dexterity.value),
-      source: { type: "ability", ability: "dexterity" },
-    }]),
+    armor,
+    armorClass: calculateArmorClass(abilities, armor),
   }
 }
 
