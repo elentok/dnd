@@ -3,7 +3,7 @@ import {
   Ability,
   abilityScoreToModifier,
 } from "../data/abilities.ts"
-import { Character } from "../data/character.ts"
+import { BASE_ARMOR_CLASS, Character } from "../data/character.ts"
 import { diceValue, roll } from "../data/dice.ts"
 import { Klass, klassFeatures } from "../data/klass.ts"
 import { Race, raceAbilityBonus } from "../data/race.ts"
@@ -45,7 +45,7 @@ export function createCharacter(
     race,
     klass,
     abilities,
-    armorClass: createScore(10, [{
+    armorClass: createScore(BASE_ARMOR_CLASS, [{
       value: abilityScoreToModifier(abilities.dexterity.value),
       source: { type: "ability", ability: "dexterity" },
     }]),
