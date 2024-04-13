@@ -1,6 +1,6 @@
-import { assertEquals } from "https://deno.land/std@0.204.0/assert/mod.ts"
+import { assertEquals } from "std:assert"
 import { getLevel } from "./levels.ts"
-import { describe, it } from "https://deno.land/std/testing/bdd.ts"
+import { describe, it } from "std:bdd"
 
 describe(getLevel.name, () => {
   const examples: Array<{ xp: number; level: number }> = [

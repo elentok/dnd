@@ -1,4 +1,4 @@
-import { parse, stringify } from "https://deno.land/std@0.207.0/toml/mod.ts"
+import { parse, stringify } from "std:toml"
 import { Character } from "./data/character.ts"
 import { number, object, string } from "npm:yup"
 import { Bonus, BonusSource, Score } from "./data/score.ts"

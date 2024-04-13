@@ -1,6 +1,6 @@
 import { convert, Currency, Money, money } from "./money.ts"
-import { describe, it } from "https://deno.land/std@0.221.0/testing/bdd.ts"
-import { assertEquals } from "https://deno.land/std@0.221.0/assert/mod.ts"
+import { describe, it } from "std:bdd"
+import { assertEquals } from "std:assert"
 
 describe(convert.name, () => {
   const EXAMPLES: Array<{ from: Money; to: Currency; expected: number }> = [

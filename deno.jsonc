@@ -5,6 +5,11 @@
   },
   "fmt": {
     "semiColons": false
+  },
+  "imports": {
+    "std:assert": "https://deno.land/std@0.221.0/assert/mod.ts",
+    "std:bdd": "https://deno.land/std@0.221.0/testing/bdd.ts",
+    "std:mock": "https://deno.land/std@0.221.0/testing/mock.ts"
+    "std:toml": "https://deno.land/std@0.221.0/toml/mod.ts"
   }
-
 }

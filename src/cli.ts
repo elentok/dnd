@@ -30,6 +30,14 @@ program.command("add-xp <amount> [query]").description("Adds XP to a character")
     },
   )
 
+program.command("set-armor").description("Sets a character's armor")
+  .action(
+    async () => {
+      const { setArmor } = await import("./commands/setArmor.ts")
+      setArmor()
+    },
+  )
+
 program.command("battle").description("Starts a battle")
   .action(
     async () => {

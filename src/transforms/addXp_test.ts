@@ -1,8 +1,8 @@
-import { assertEquals } from "https://deno.land/std@0.221.0/assert/mod.ts"
-import { describe, it } from "https://deno.land/std@0.221.0/testing/bdd.ts"
+import { assertEquals } from "std:assert"
+import { describe, it } from "std:bdd"
 import { addXp } from "./addXp.ts"
 import { _internals } from "../data/dice.ts"
-import { stub } from "https://deno.land/std@0.221.0/testing/mock.ts"
+import { stub } from "std:mock"
 import { createCharacter } from "./createCharacter.ts"
 import { abilityScoreToModifier } from "../data/abilities.ts"
 

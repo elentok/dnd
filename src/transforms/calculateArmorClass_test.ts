@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.221.0/assert/mod.ts"
-import { describe, it } from "https://deno.land/std@0.221.0/testing/bdd.ts"
+import { assertEquals } from "std:assert"
+import { describe, it } from "std:bdd"
 import { calculateArmorClass } from "./calculateArmorClass.ts"
 import { fromPartial } from "npm:@total-typescript/shoehorn"
 

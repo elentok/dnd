@@ -10,8 +10,17 @@ import { racePrettyName } from "../data/race.ts"
 import { serializeScore } from "../serialize.ts"
 
 export function printCharacter(character: Character): void {
-  const { name, xp, level, race, abilities, klass, hitPoints, armorClass } =
-    character
+  const {
+    name,
+    xp,
+    level,
+    race,
+    abilities,
+    klass,
+    hitPoints,
+    armorClass,
+    armor,
+  } = character
 
   const description = [
     "Level",
@@ -24,6 +33,9 @@ export function printCharacter(character: Character): void {
   console.info(`- XP: ${xp} (${calcXpToNextLevel(xp)} to next level)`)
   console.info(`- HP: ${serializeScore(hitPoints)}`)
   console.info(`- AC: ${serializeScore(armorClass)}`)
+  if (armor) {
+    console.info(`- Armor: ${armor.name} (${armor.armorType})`)
+  }
   console.info("- Abilities:")
   for (const ability of ABILITIES) {
     const score = abilities[ability]
